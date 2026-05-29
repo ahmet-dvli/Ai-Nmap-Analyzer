@@ -1,2 +1,7 @@
-Python tabanlı bir network scanning ve risk analiz aracıdır.
-Nmap çıktısını parse eder ve açık portlara göre risk sınıflandırması yapar.
+An AI-enhanced cybersecurity tool that automates Nmap scanning, parses results, performs risk analysis, and generates intelligent security reports using OpenAI.
+
+## ⚠️ Environment Setup
+
+Create a `.env` file:
+
+OPENAI_API_KEY=your_api_key_here
