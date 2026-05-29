@@ -1,8 +1,12 @@
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
 import subprocess
 import re
-import json 
+import sys
+import json
 
-target = "scanme.nmap.org"
+target = sys.argv[1] if len(sys.argv) > 1 else "scanme.nmap.org"
 
 command = ["nmap","-sV", target]
 
@@ -59,3 +63,34 @@ with open("results.json", "w") as f:
     json.dump(results, f, indent=4)
 
 print("JSON export tamamlandı → results.json oluşturuldu")
+
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+
+prompt = f"""
+Sen bir siber güvenlik analistisin.
+
+Aşağıdaki Nmap tarama sonuçlarını analiz et ve Türkçe rapor yaz:
+
+- Her port için risk seviyesi (Yüksek / Orta / Düşük)
+- Neden riskli olduğunu açıkla
+- Kısa öneriler ver
+
+Veri:
+{json.dumps(results, indent=2)}
+"""
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "Sen deneyimli bir siber güvenlik uzmanısın."},
+        {"role": "user", "content": prompt}
+    ]
+)
+
+print("YAPAY ZEKA GÜVENLİK RAPORU")
+print(response.choices[0].message.content)
